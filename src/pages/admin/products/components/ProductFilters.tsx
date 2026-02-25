@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React from 'react'
 import { Filter, RotateCcw, Edit3 } from 'lucide-react'
 import { FilterParams } from '../types/product.types'
 

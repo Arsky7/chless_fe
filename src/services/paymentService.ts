@@ -1,6 +1,3 @@
-import { api } from './api'
-import { API_ENDPOINTS } from '../config/api.config'
-import { formatCurrency } from '../utils/formatters'
 
 // Types
 export interface PaymentCustomer {
@@ -183,7 +180,7 @@ export const paymentService = {
       //     params[key] = value.toString()
       //   }
       // })
-      
+
       // Menggunakan API_ENDPOINTS dari config
       // const response = await apiService.get<ApiResponse<Payment[]>>(
       //   API_ENDPOINTS.ORDERS.INDEX, // Sesuaikan dengan endpoint yang benar
@@ -193,27 +190,27 @@ export const paymentService = {
 
       // Simulate API delay for development
       await new Promise(resolve => setTimeout(resolve, 500))
-      
+
       // Filter sample data based on filters
       let filtered = [...samplePayments]
-      
+
       if (filters.status && filters.status !== 'all') {
         filtered = filtered.filter(p => p.status === filters.status)
       }
-      
+
       if (filters.method && filters.method !== 'all') {
         filtered = filtered.filter(p => p.method.type === filters.method)
       }
-      
+
       if (filters.search) {
         const searchLower = filters.search.toLowerCase()
-        filtered = filtered.filter(p => 
+        filtered = filtered.filter(p =>
           p.orderId.toLowerCase().includes(searchLower) ||
           p.customer.name.toLowerCase().includes(searchLower) ||
           p.id.toLowerCase().includes(searchLower)
         )
       }
-      
+
       return filtered
     } catch (error) {
       console.error('Error fetching payments:', error)
@@ -244,7 +241,7 @@ export const paymentService = {
   /**
    * Approve a payment
    */
-  async approvePayment(id: string): Promise<{ message: string }> {
+  async approvePayment(_id: string): Promise<{ message: string }> {
     try {
       // Uncomment for production API
       // const response = await apiService.post<ApiResponse<{ message: string }>>(
@@ -263,7 +260,7 @@ export const paymentService = {
   /**
    * Reject a payment
    */
-  async rejectPayment(id: string): Promise<{ message: string }> {
+  async rejectPayment(_id: string): Promise<{ message: string }> {
     try {
       // Uncomment for production API
       // const response = await apiService.post<ApiResponse<{ message: string }>>(
@@ -282,7 +279,7 @@ export const paymentService = {
   /**
    * Process a refund for a payment
    */
-  async processRefund({ id, reason }: { id: string; reason: string }): Promise<{ message: string }> {
+  async processRefund(_data: { id?: string; reason?: string }): Promise<{ message: string }> {
     try {
       // Uncomment for production API
       // const response = await apiService.post<ApiResponse<{ message: string }>>(
@@ -322,9 +319,9 @@ export const paymentService = {
    * Process a refund request (approve/reject)
    */
   async processRefundRequest(
-    id: string, 
-    action: 'approve' | 'reject', 
-    reason?: string
+    _id: string,
+    _action: 'approve' | 'reject',
+    _reason?: string
   ): Promise<{ message: string }> {
     try {
       // Uncomment for production API
@@ -335,7 +332,7 @@ export const paymentService = {
       // return response.data
 
       await new Promise(resolve => setTimeout(resolve, 500))
-      return { message: `Refund ${action}d successfully` }
+      return { message: `Refund ${_action}d successfully` }
     } catch (error) {
       console.error('Error processing refund request:', error)
       throw error
@@ -354,14 +351,14 @@ export const paymentService = {
           params[key] = value.toString()
         }
       })
-      
+
       console.log('Exporting with filters:', params)
-      
+
       // const response = await api.get(`${API_ENDPOINTS.ORDERS.INDEX}/export`, { // Sesuaikan dengan endpoint
       //   params,
       //   responseType: 'blob'
       // })
-      
+
       // // Create download link
       // const url = window.URL.createObjectURL(new Blob([response.data]))
       // const link = document.createElement('a')
@@ -370,7 +367,7 @@ export const paymentService = {
       // document.body.appendChild(link)
       // link.click()
       // link.remove()
-      
+
       alert(`Exporting payment report with filters: ${JSON.stringify(filters)}`)
     } catch (error) {
       console.error('Error exporting report:', error)

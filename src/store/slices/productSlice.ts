@@ -14,7 +14,6 @@ export interface Product {
   images: ProductImage[]
   sizes: ProductSize[]
   category: Category | null
-  brand: Brand | null
   is_active: boolean
   is_featured: boolean
 }
@@ -40,12 +39,7 @@ export interface Category {
   slug: string
 }
 
-export interface Brand {
-  id: number
-  name: string
-  slug: string
-  logo: string | null
-}
+
 
 // Tipe data untuk state product
 interface ProductState {
@@ -53,14 +47,12 @@ interface ProductState {
   featuredProducts: Product[]
   currentProduct: Product | null
   categories: Category[]
-  brands: Brand[]
   loading: boolean
   error: string | null
   totalPages: number
   currentPage: number
   filters: {
     category_id?: number
-    brand_id?: number
     min_price?: number
     max_price?: number
     color?: string
@@ -77,7 +69,6 @@ const initialState: ProductState = {
   featuredProducts: [],
   currentProduct: null,
   categories: [],
-  brands: [],
   loading: false,
   error: null,
   totalPages: 1,
@@ -117,10 +108,7 @@ const productSlice = createSlice({
       state.categories = action.payload
     },
 
-    // Set brands
-    setBrands: (state, action: PayloadAction<Brand[]>) => {
-      state.brands = action.payload
-    },
+
 
     // Update filters
     setFilters: (state, action: PayloadAction<Partial<ProductState['filters']>>) => {
@@ -156,7 +144,6 @@ export const {
   setFeaturedProducts,
   setCurrentProduct,
   setCategories,
-  setBrands,
   setFilters,
   clearFilters,
   setLoading,

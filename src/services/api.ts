@@ -1,5 +1,5 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
-import API_CONFIG, { API_ENDPOINTS, getApiUrl, isDevelopment } from '../config/api.config'
+import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import API_CONFIG, { API_ENDPOINTS, isDevelopment } from '../config/api.config'
 
 // Storage keys
 export const STORAGE_KEYS = {
@@ -56,20 +56,20 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
-    
+
     // Untuk CSRF protection di Laravel
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
     if (csrfToken) {
       config.headers['X-CSRF-TOKEN'] = csrfToken
     }
-    
+
     logger.debug('Request:', {
       method: config.method?.toUpperCase(),
       url: config.url,
       data: config.data,
       params: config.params
     })
-    
+
     return config
   },
   (error: any): Promise<never> => {
@@ -91,7 +91,7 @@ api.interceptors.response.use(
   async (error: any): Promise<never> => {
     if (error.response) {
       const { status, data } = error.response
-      
+
       logger.error('API Error:', {
         url: error.config?.url,
         status,
@@ -103,7 +103,7 @@ api.interceptors.response.use(
       if (status === 401) {
         localStorage.removeItem(STORAGE_KEYS.TOKEN)
         localStorage.removeItem(STORAGE_KEYS.USER)
-        
+
         // Redirect ke login jika bukan di halaman login
         if (!window.location.pathname.includes('/login')) {
           window.location.href = '/login'
@@ -128,7 +128,7 @@ api.interceptors.response.use(
     } else if (error.request) {
       // Network error - no response
       logger.error('Network Error:', error.request)
-      
+
       if (isDevelopment()) {
         console.warn(`⚠️ Cannot connect to ${API_CONFIG.apiUrl}. Make sure Laravel server is running.`)
       }
@@ -174,8 +174,8 @@ export const apiService = {
 
   // POST request for FormData (upload file)
   postForm: async <T>(
-    url: string, 
-    formData: FormData, 
+    url: string,
+    formData: FormData,
     onProgress?: (percentage: number) => void
   ): Promise<T> => {
     const response = await api.post(url, formData, {
@@ -198,7 +198,7 @@ export const apiService = {
     Object.entries(data).forEach(([key, value]) => {
       params.append(key, String(value))
     })
-    
+
     const response = await api.post(url, params, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

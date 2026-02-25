@@ -2,7 +2,6 @@ import { Link, useLocation } from 'react-router-dom'
 import { memo, useMemo } from 'react'
 import {
   LayoutDashboard,
-  ShoppingBag,
   Users,
   CreditCard,
   Package,
@@ -48,7 +47,6 @@ const Icons = {
   Products: <Package className="w-5 h-5" />,
   Inventory: <Boxes className="w-5 h-5" />,
   Categories: <Tags className="w-5 h-5" />,
-  Brands: <ShoppingBag className="w-5 h-5" />,
   Staff: <UserCog className="w-5 h-5" />,
   Reports: <BarChart3 className="w-5 h-5" />,
   Settings: <Settings className="w-5 h-5" />,
@@ -78,7 +76,6 @@ const NAV_GROUPS: NavGroup[] = [
       { title: 'Products', icon: Icons.Products, path: '/admin/products' },
       { title: 'Inventory', icon: Icons.Inventory, path: '/admin/inventory', badge: 5 },
       { title: 'Categories', icon: Icons.Categories, path: '/admin/categories' },
-      { title: 'Brands', icon: Icons.Brands, path: '/admin/brands' },
     ],
   },
   {
@@ -92,14 +89,14 @@ const NAV_GROUPS: NavGroup[] = [
 ]
 
 // Komponen NavItem yang di-memo
-const NavItemComponent = memo(({ 
-  item, 
-  isOpen, 
-  isActive 
-}: { 
-  item: NavItem; 
-  isOpen: boolean; 
-  isActive: boolean 
+const NavItemComponent = memo(({
+  item,
+  isOpen,
+  isActive
+}: {
+  item: NavItem;
+  isOpen: boolean;
+  isActive: boolean
 }) => (
   <Link
     to={item.path}
@@ -107,8 +104,8 @@ const NavItemComponent = memo(({
       flex items-center gap-3 px-3 py-3 rounded-lg
       transition-all duration-200 ease-in-out
       hover:scale-[1.02] active:scale-[0.98]
-      ${isActive 
-        ? 'bg-gradient-to-r from-gray-100 to-gray-50 text-black border-l-4 border-red-500 shadow-sm' 
+      ${isActive
+        ? 'bg-gradient-to-r from-gray-100 to-gray-50 text-black border-l-4 border-red-500 shadow-sm'
         : 'text-gray-700 hover:bg-gray-50 hover:shadow-sm'
       }
       ${!isOpen && 'justify-center'}
@@ -120,7 +117,7 @@ const NavItemComponent = memo(({
     `}>
       {item.icon}
     </span>
-    
+
     {isOpen && (
       <>
         <span className="flex-1 text-sm font-medium">{item.title}</span>
@@ -295,8 +292,8 @@ const AdminSidebar = memo(({ isOpen, onToggle }: AdminSidebarProps) => {
         "
         aria-label={isOpen ? 'Close sidebar' : 'Open sidebar'}
       >
-        {isOpen ? 
-          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" /> : 
+        {isOpen ?
+          <ChevronLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" /> :
           <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         }
       </button>

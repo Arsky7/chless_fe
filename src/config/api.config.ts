@@ -406,6 +406,16 @@ export const API_ENDPOINTS = {
   },
 
   // ============================================
+  // RETURNS
+  // ============================================
+  RETURNS: {
+    INDEX: '/admin/returns',
+    STATS: '/admin/returns/stats',
+    DETAIL: (id: number | string) => `/admin/returns/${id}`,
+    BULK_ACTION: '/admin/returns/bulk-action',
+  },
+
+  // ============================================
   // SHIPPING
   // ============================================
   SHIPPING: {

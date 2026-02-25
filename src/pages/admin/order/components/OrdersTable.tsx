@@ -26,13 +26,7 @@ const OrdersTable = ({
   const [selectedOrders, setSelectedOrders] = useState<string[]>([])
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null)
 
-  const toggleSelectAll = () => {
-    if (selectedOrders.length === orders.length) {
-      setSelectedOrders([])
-    } else {
-      setSelectedOrders(orders.map(o => o.id))
-    }
-  }
+
 
   const toggleSelectOrder = (orderId: string) => {
     if (selectedOrders.includes(orderId)) {

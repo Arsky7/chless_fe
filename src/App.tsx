@@ -11,6 +11,7 @@ const PaymentManagement = lazy(() => import('./pages/admin/payment/PaymentManage
 const InventoryPage = lazy(() => import('./pages/admin/inventory/InventoryPage'))
 const CategoriesPage = lazy(() => import('./pages/admin/categories/CategoriesPage'))
 const CustomersPage = lazy(() => import('./pages/admin/customers/CustomersPage'))
+const ReturnsManagementPage = lazy(() => import('./pages/admin/returns/ReturnsManagementPage'))
 
 // Loading Component
 const PageLoading = () => (
@@ -31,6 +32,7 @@ function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="orders" element={<OrderList />} />
           <Route path="customers" element={<CustomersPage />} />
+          <Route path="returns" element={<ReturnsManagementPage />} />
 
           {/* Payment Routes */}
           <Route path="payments" element={<PaymentManagement />} />

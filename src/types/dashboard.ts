@@ -133,7 +133,6 @@ export interface ProductReportData {
     name: string
     sku: string
     category: string
-    brand: string
     sold_quantity: number
     total_revenue: number
     total_revenue_formatted: string

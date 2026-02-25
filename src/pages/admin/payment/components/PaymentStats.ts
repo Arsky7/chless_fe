@@ -1,6 +1,6 @@
 import React from 'react'
 import { PaymentStats as PaymentStatsType } from '../../../../services/paymentService'
-import { formatCurrency } from '../../../../utils/formatters'
+
 
 interface PaymentStatsProps {
   stats: PaymentStatsType
@@ -9,9 +9,9 @@ interface PaymentStatsProps {
 
 const PaymentStats: React.FC<PaymentStatsProps> = ({ stats, onStatClick }) => {
   const statCards = [
-    { 
-      key: 'total', 
-      title: 'Total Revenue', 
+    {
+      key: 'total',
+      title: 'Total Revenue',
       icon: 'fa-money-bill-wave',
       value: stats.total,
       change: '+12.5%',
@@ -19,9 +19,9 @@ const PaymentStats: React.FC<PaymentStatsProps> = ({ stats, onStatClick }) => {
       iconBg: 'bg-gradient-to-br from-black to-gray-800',
       iconColor: 'text-white',
     },
-    { 
-      key: 'successful', 
-      title: 'Successful', 
+    {
+      key: 'successful',
+      title: 'Successful',
       icon: 'fa-check-circle',
       value: stats.successful,
       change: '+8.3%',
@@ -29,9 +29,9 @@ const PaymentStats: React.FC<PaymentStatsProps> = ({ stats, onStatClick }) => {
       iconBg: 'bg-gradient-to-br from-green-500 to-green-400',
       iconColor: 'text-white',
     },
-    { 
-      key: 'pending', 
-      title: 'Pending', 
+    {
+      key: 'pending',
+      title: 'Pending',
       icon: 'fa-clock',
       value: stats.pending,
       change: '3 pending',
@@ -39,9 +39,9 @@ const PaymentStats: React.FC<PaymentStatsProps> = ({ stats, onStatClick }) => {
       iconBg: 'bg-gradient-to-br from-yellow-500 to-yellow-400',
       iconColor: 'text-white',
     },
-    { 
-      key: 'failed', 
-      title: 'Failed', 
+    {
+      key: 'failed',
+      title: 'Failed',
       icon: 'fa-times-circle',
       value: stats.failed,
       change: '-60%',
