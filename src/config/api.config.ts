@@ -13,7 +13,7 @@ export interface ApiConfig {
   apiUrl: string
   apiTimeout: number
   apiVersion: string
-  
+
   // App
   appName: string
   appEnv: string
@@ -22,13 +22,13 @@ export interface ApiConfig {
   appUrl: string
   appLocale: string
   appFallbackLocale: string
-  
+
   // Auth & Security
   tokenKey: string
   refreshTokenKey: string
   userKey: string
   sessionLifetime: number
-  
+
   // Payment Gateways
   midtrans: {
     clientKey: string
@@ -38,13 +38,13 @@ export interface ApiConfig {
   xendit: {
     isProduction: boolean
   }
-  
+
   // Shipping
   rajaongkir: {
     apiKey: string
     mode: string
   }
-  
+
   // Company Information
   company: {
     name: string
@@ -56,7 +56,7 @@ export interface ApiConfig {
     province: string
     postalCode: string
   }
-  
+
   // Social Media
   social: {
     instagram: string
@@ -64,7 +64,7 @@ export interface ApiConfig {
     shopee: string
     tokopedia: string
   }
-  
+
   // Features (based on backend capabilities)
   features: {
     paymentGateway: boolean
@@ -75,27 +75,27 @@ export interface ApiConfig {
     reviewSystem: boolean
     wishlist: boolean
   }
-  
+
   // Pagination
   pagination: {
     defaultPageSize: number
     maxPageSize: number
   }
-  
+
   // Currency
   currency: {
     code: string
     symbol: string
     locale: string
   }
-  
+
   // Date Format
   dateFormat: {
     date: string
     datetime: string
     timezone: string
   }
-  
+
   // Upload
   upload: {
     maxFileSize: number // in bytes
@@ -104,20 +104,20 @@ export interface ApiConfig {
     allowedImageTypes: string[]
     allowedVideoTypes: string[]
   }
-  
+
   // Cache & Storage
   storage: {
     prefix: string
     sessionTimeout: number // in milliseconds
   }
-  
+
   // Contact
   contact: {
     phone: string
     email: string
     whatsapp: string
   }
-  
+
   // Logging
   logLevel: string
   debug: boolean
@@ -132,19 +132,19 @@ export interface ApiConfig {
  */
 const getEnv = (key: string, defaultValue?: string): string => {
   const value = import.meta.env[key]
-  
+
   if (value === undefined) {
     if (defaultValue !== undefined) {
       return defaultValue
     }
-    
+
     if (import.meta.env.PROD) {
       console.warn(`⚠️ Environment variable ${key} is not defined`)
     }
-    
+
     return ''
   }
-  
+
   return value
 }
 
@@ -153,11 +153,11 @@ const getEnv = (key: string, defaultValue?: string): string => {
  */
 const getEnvBoolean = (key: string, defaultValue: boolean = false): boolean => {
   const value = import.meta.env[key]
-  
+
   if (value === undefined) {
     return defaultValue
   }
-  
+
   return value.toLowerCase() === 'true' || value === '1'
 }
 
@@ -166,11 +166,11 @@ const getEnvBoolean = (key: string, defaultValue: boolean = false): boolean => {
  */
 const getEnvNumber = (key: string, defaultValue?: number): number => {
   const value = import.meta.env[key]
-  
+
   if (value === undefined) {
     return defaultValue || 0
   }
-  
+
   const number = Number(value)
   return isNaN(number) ? defaultValue || 0 : number
 }
@@ -186,7 +186,7 @@ export const API_CONFIG: ApiConfig = {
   apiUrl: getEnv('VITE_API_URL', 'http://localhost:8000/api'), // <-- UBAH KE localhost:8000
   apiTimeout: getEnvNumber('VITE_API_TIMEOUT', 30000),
   apiVersion: 'v1',
-  
+
   // ============================================
   // APP CONFIGURATION
   // ============================================
@@ -197,7 +197,7 @@ export const API_CONFIG: ApiConfig = {
   appUrl: getEnv('VITE_APP_URL', 'http://localhost:5173'),
   appLocale: getEnv('APP_LOCALE', 'id'),
   appFallbackLocale: getEnv('APP_FALLBACK_LOCALE', 'en'),
-  
+
   // ============================================
   // AUTH & SECURITY
   // ============================================
@@ -205,7 +205,7 @@ export const API_CONFIG: ApiConfig = {
   refreshTokenKey: 'refresh_token',
   userKey: 'user',
   sessionLifetime: getEnvNumber('SESSION_LIFETIME', 120), // in minutes
-  
+
   // ============================================
   // PAYMENT GATEWAYS
   // ============================================
@@ -217,7 +217,7 @@ export const API_CONFIG: ApiConfig = {
   xendit: {
     isProduction: getEnvBoolean('XENDIT_IS_PRODUCTION', false),
   },
-  
+
   // ============================================
   // SHIPPING
   // ============================================
@@ -225,7 +225,7 @@ export const API_CONFIG: ApiConfig = {
     apiKey: getEnv('RAJAONGKIR_API_KEY', ''),
     mode: getEnv('RAJAONGKIR_MODE', 'starter'),
   },
-  
+
   // ============================================
   // COMPANY INFORMATION
   // ============================================
@@ -239,7 +239,7 @@ export const API_CONFIG: ApiConfig = {
     province: getEnv('VITE_COMPANY_PROVINCE', 'DKI Jakarta'),
     postalCode: getEnv('VITE_COMPANY_POSTAL_CODE', '12345'),
   },
-  
+
   // ============================================
   // SOCIAL MEDIA
   // ============================================
@@ -249,7 +249,7 @@ export const API_CONFIG: ApiConfig = {
     shopee: getEnv('VITE_SHOPEE_URL', 'https://shopee.co.id/chless'),
     tokopedia: getEnv('VITE_TOKOPEDIA_URL', 'https://tokopedia.com/chless'),
   },
-  
+
   // ============================================
   // FEATURES
   // ============================================
@@ -262,7 +262,7 @@ export const API_CONFIG: ApiConfig = {
     reviewSystem: getEnvBoolean('VITE_ENABLE_REVIEW_SYSTEM', true),
     wishlist: getEnvBoolean('VITE_ENABLE_WISHLIST', true),
   },
-  
+
   // ============================================
   // PAGINATION
   // ============================================
@@ -270,7 +270,7 @@ export const API_CONFIG: ApiConfig = {
     defaultPageSize: getEnvNumber('VITE_DEFAULT_PAGE_SIZE', 20),
     maxPageSize: getEnvNumber('VITE_MAX_PAGE_SIZE', 100),
   },
-  
+
   // ============================================
   // CURRENCY
   // ============================================
@@ -279,7 +279,7 @@ export const API_CONFIG: ApiConfig = {
     symbol: getEnv('VITE_CURRENCY_SYMBOL', 'Rp'),
     locale: getEnv('VITE_CURRENCY_LOCALE', 'id-ID'),
   },
-  
+
   // ============================================
   // DATE FORMAT
   // ============================================
@@ -288,7 +288,7 @@ export const API_CONFIG: ApiConfig = {
     datetime: getEnv('VITE_DATETIME_FORMAT', 'dd MMM yyyy HH:mm'),
     timezone: getEnv('VITE_TIMEZONE', 'Asia/Jakarta'),
   },
-  
+
   // ============================================
   // UPLOAD LIMITS
   // ============================================
@@ -299,7 +299,7 @@ export const API_CONFIG: ApiConfig = {
     allowedImageTypes: getEnv('VITE_ALLOWED_IMAGE_TYPES', 'jpg,jpeg,png,webp').split(','),
     allowedVideoTypes: getEnv('VITE_ALLOWED_VIDEO_TYPES', 'mp4,mov,avi').split(','),
   },
-  
+
   // ============================================
   // CACHE & STORAGE
   // ============================================
@@ -307,7 +307,7 @@ export const API_CONFIG: ApiConfig = {
     prefix: getEnv('VITE_LOCAL_STORAGE_PREFIX', 'chless_'),
     sessionTimeout: getEnvNumber('VITE_SESSION_TIMEOUT', 7200) * 1000, // Convert to milliseconds
   },
-  
+
   // ============================================
   // CONTACT
   // ============================================
@@ -316,7 +316,7 @@ export const API_CONFIG: ApiConfig = {
     email: getEnv('VITE_CONTACT_EMAIL', 'cs@chless.com'),
     whatsapp: getEnv('VITE_CONTACT_WHATSAPP', '6281234567890'),
   },
-  
+
   // ============================================
   // LOGGING
   // ============================================
@@ -341,7 +341,7 @@ export const API_ENDPOINTS = {
     FORGOT_PASSWORD: '/forgot-password',
     RESET_PASSWORD: '/reset-password',
   },
-  
+
   // ============================================
   // ADMIN - DASHBOARD
   // ============================================
@@ -349,7 +349,7 @@ export const API_ENDPOINTS = {
     DASHBOARD: '/admin/dashboard',
     STATS: '/admin/dashboard/stats',
   },
-  
+
   // ============================================
   // CATEGORIES
   // ============================================
@@ -360,7 +360,7 @@ export const API_ENDPOINTS = {
     UPDATE: (id: number) => `/admin/categories/${id}`,
     DELETE: (id: number) => `/admin/categories/${id}`,
   },
-  
+
   // ============================================
   // PRODUCTS
   // ============================================
@@ -380,7 +380,7 @@ export const API_ENDPOINTS = {
     IMPORT: '/admin/products/import',
     PRINT_BARCODES: '/admin/products/print-barcodes',
   },
-  
+
   // ============================================
   // ORDERS
   // ============================================
@@ -394,17 +394,17 @@ export const API_ENDPOINTS = {
     UPDATE_STATUS: (id: string) => `/orders/${id}/status`,
     INVOICE: (id: string) => `/orders/${id}/invoice`,
   },
-  
+
   // ============================================
   // CUSTOMERS
   // ============================================
   CUSTOMERS: {
-    INDEX: '/customers',
-    STATS: '/customers/stats',
-    DETAIL: (id: number) => `/customers/${id}`,
-    ORDERS: (id: number) => `/customers/${id}/orders`,
+    INDEX: '/admin/customers',
+    STATS: '/admin/customers/stats',
+    DETAIL: (id: number) => `/admin/customers/${id}`,
+    TOGGLE_ACTIVE: (id: number) => `/admin/customers/${id}/toggle-active`,
   },
-  
+
   // ============================================
   // SHIPPING
   // ============================================
@@ -414,7 +414,7 @@ export const API_ENDPOINTS = {
     COST: '/shipping/cost',
     TRACK: (awb: string) => `/shipping/track/${awb}`,
   },
-  
+
   // ============================================
   // PAYMENTS
   // ============================================
@@ -423,7 +423,7 @@ export const API_ENDPOINTS = {
     NOTIFICATION: '/payments/notification',
     STATUS: (id: string) => `/payments/${id}/status`,
   },
-  
+
   // ============================================
   // REPORTS
   // ============================================
@@ -432,7 +432,7 @@ export const API_ENDPOINTS = {
     PRODUCTS: '/reports/products',
     EXPORT: '/reports/export',
   },
-  
+
   // ============================================
   // STAFF
   // ============================================
@@ -440,7 +440,7 @@ export const API_ENDPOINTS = {
     INDEX: '/staff',
     DETAIL: (id: number) => `/staff/${id}`,
   },
-  
+
   // ============================================
   // SETTINGS
   // ============================================
@@ -495,7 +495,7 @@ export const formatDate = (date: string | Date, format: 'date' | 'datetime' = 'd
   const options: Intl.DateTimeFormatOptions = {
     timeZone: API_CONFIG.dateFormat.timezone,
   }
-  
+
   if (format === 'date') {
     options.day = 'numeric'
     options.month = 'short'
@@ -507,7 +507,7 @@ export const formatDate = (date: string | Date, format: 'date' | 'datetime' = 'd
     options.hour = '2-digit'
     options.minute = '2-digit'
   }
-  
+
   return new Intl.DateTimeFormat('id-ID', options).format(d)
 }
 

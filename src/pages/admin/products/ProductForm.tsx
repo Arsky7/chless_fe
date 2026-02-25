@@ -24,12 +24,12 @@ interface ProductFormData {
   short_description: string
   description: string
   tags: string
-  
+
   // Pricing - HANYA SALE PRICE (base_price DIHAPUS)
   price: number | ''  // Ganti sale_price menjadi price
   sale_starts_at: string
   sale_ends_at: string
-  
+
   // Attributes
   sku: string
   gender: 'men' | 'women' | 'unisex' | ''
@@ -39,22 +39,22 @@ interface ProductFormData {
   length: number | ''
   width: number | ''
   height: number | ''
-  
+
   // Options
   is_featured: boolean
   track_inventory: boolean
   allow_backorders: boolean
   is_returnable: boolean
-  
+
   // SEO
   meta_title: string
   meta_description: string
   meta_keywords: string
-  
+
   // Status
   is_active: boolean
   visibility: 'public' | 'hidden' | 'private'
-  
+
   // Sizes
   sizes: ProductSize[]
 }
@@ -120,7 +120,7 @@ const ProductForm = () => {
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])
-  
+
   // Product data - tanpa base_price
   const [formData, setFormData] = useState<ProductFormData>({
     // Basic Info
@@ -129,12 +129,12 @@ const ProductForm = () => {
     short_description: '',
     description: '',
     tags: '',
-    
+
     // Pricing - HANYA price
     price: '',
     sale_starts_at: '',
     sale_ends_at: '',
-    
+
     // Attributes
     sku: '',
     gender: '',
@@ -144,22 +144,22 @@ const ProductForm = () => {
     length: '',
     width: '',
     height: '',
-    
+
     // Options
     is_featured: false,
     track_inventory: true,
     allow_backorders: false,
     is_returnable: true,
-    
+
     // SEO
     meta_title: '',
     meta_description: '',
     meta_keywords: '',
-    
+
     // Status
     is_active: true,
     visibility: 'public',
-    
+
     // Sizes
     sizes: []
   })
@@ -195,7 +195,7 @@ const ProductForm = () => {
       setLoading(true)
       const response = await apiService.get<ProductResponse>(`/admin/products/${id}`)
       const product = response.data
-      
+
       setFormData({
         name: product.name || '',
         category_id: product.category_id || '',
@@ -237,6 +237,29 @@ const ProductForm = () => {
     }
   }
 
+  // Helpers for images
+  const getImageUrl = (img: ProductImage): string => {
+    if (img.url.startsWith('data:')) return img.url
+    if (img.url.startsWith('http://') || img.url.startsWith('https://')) return img.url
+
+    const backendUrl = 'http://localhost:8000'
+    const path = img.url
+
+    if (path.startsWith('/storage/') || path.startsWith('storage/')) {
+      const cleanPath = path.startsWith('/') ? path : '/' + path
+      return `${backendUrl}${cleanPath}`
+    }
+
+    const cleanPath = path.startsWith('/') ? path : '/' + path
+    return `${backendUrl}/storage${cleanPath}`
+  }
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.currentTarget
+    target.onerror = null
+    target.src = 'https://placehold.co/400x500/f3f4f6/a1a1aa?text=Image+Not+Found'
+  }
+
   // Handlers
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target as HTMLInputElement
@@ -251,10 +274,10 @@ const ProductForm = () => {
     if (!files) return
 
     setUploading(true)
-    
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
-      
+
       const reader = new FileReader()
       reader.onloadend = () => {
         setImages(prev => [...prev, {
@@ -265,7 +288,7 @@ const ProductForm = () => {
       }
       reader.readAsDataURL(file)
     }
-    
+
     setUploading(false)
   }
 
@@ -284,7 +307,7 @@ const ProductForm = () => {
   const addSize = () => {
     const usedSizes = formData.sizes.map(s => s.size)
     const availableSize = availableSizes.find(size => !usedSizes.includes(size))
-    
+
     if (availableSize) {
       setFormData(prev => ({
         ...prev,
@@ -305,7 +328,7 @@ const ProductForm = () => {
   const updateSizeStock = (index: number, stock: number) => {
     setFormData(prev => ({
       ...prev,
-      sizes: prev.sizes.map((size, i) => 
+      sizes: prev.sizes.map((size, i) =>
         i === index ? { ...size, stock } : size
       )
     }))
@@ -338,26 +361,26 @@ const ProductForm = () => {
       setSaving(true)
 
       const submitData = new FormData()
-      
+
       // Basic info
       submitData.append('name', formData.name)
       submitData.append('category_id', String(formData.category_id))
       submitData.append('short_description', formData.short_description || '')
       submitData.append('description', formData.description || '')
       submitData.append('tags', formData.tags || '')
-      
+
       // Pricing - HANYA price (bukan base_price)
       submitData.append('base_price', String(formData.price))
-      
+
       // Sale price (optional)
       if (formData.sale_starts_at || formData.sale_ends_at) {
         // Jika ada sale period, price dianggap sebagai sale_price
         submitData.append('sale_price', String(formData.price))
       }
-      
+
       if (formData.sale_starts_at) submitData.append('sale_starts_at', formData.sale_starts_at)
       if (formData.sale_ends_at) submitData.append('sale_ends_at', formData.sale_ends_at)
-      
+
       // Attributes
       if (formData.sku) submitData.append('sku', formData.sku)
       if (formData.gender) submitData.append('gender', formData.gender)
@@ -367,18 +390,18 @@ const ProductForm = () => {
       if (formData.length) submitData.append('length', String(formData.length))
       if (formData.width) submitData.append('width', String(formData.width))
       if (formData.height) submitData.append('height', String(formData.height))
-      
+
       // Options
       submitData.append('is_featured', formData.is_featured ? '1' : '0')
       submitData.append('track_inventory', formData.track_inventory ? '1' : '0')
       submitData.append('allow_backorders', formData.allow_backorders ? '1' : '0')
       submitData.append('is_returnable', formData.is_returnable ? '1' : '0')
-      
+
       // SEO
       if (formData.meta_title) submitData.append('meta_title', formData.meta_title)
       if (formData.meta_description) submitData.append('meta_description', formData.meta_description)
       if (formData.meta_keywords) submitData.append('meta_keywords', formData.meta_keywords)
-      
+
       // Status
       submitData.append('is_active', status === 'published' ? '1' : '0')
       submitData.append('visibility', formData.visibility)
@@ -387,10 +410,10 @@ const ProductForm = () => {
       submitData.append('sizes', JSON.stringify(formData.sizes))
 
       // Images
-      images.forEach((img, index) => {
+      images.forEach((img) => {
         if (img.file) {
-          submitData.append(`images[${index}]`, img.file)
-          submitData.append(`images_main[${index}]`, img.is_main ? '1' : '0')
+          submitData.append('images[]', img.file)
+          submitData.append('is_main[]', img.is_main ? '1' : '0')
         }
       })
 
@@ -408,7 +431,7 @@ const ProductForm = () => {
       }
 
       toast.success(`Product ${isEditMode ? 'updated' : 'created'} successfully`)
-      
+
       if (status === 'published') {
         navigate('/admin/products')
       } else {
@@ -419,7 +442,7 @@ const ProductForm = () => {
 
     } catch (error: any) {
       console.error('Error response:', error.response?.data)
-      
+
       if (error.response?.status === 422) {
         const errors = error.response.data.errors
         Object.keys(errors).forEach(key => {
@@ -599,9 +622,10 @@ const ProductForm = () => {
                   {images.map((img, idx) => (
                     <div key={idx} className="relative aspect-[3/4] bg-gray-100 rounded-lg border-2 overflow-hidden group">
                       <img
-                        src={img.url}
+                        src={getImageUrl(img)}
                         alt={`Product ${idx + 1}`}
                         className="w-full h-full object-cover"
+                        onError={handleImageError}
                       />
                       {img.is_main && (
                         <span className="absolute bottom-2 left-2 bg-[#ff4d6d] text-white text-xs px-2 py-1 rounded font-bold">
@@ -655,7 +679,7 @@ const ProductForm = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="col-span-1">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Sale Period (Optional)

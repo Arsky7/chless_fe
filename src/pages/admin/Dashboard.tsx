@@ -15,20 +15,18 @@ import {
   TrendingUp,
   Package,
   AlertTriangle,
-  Loader2,
 } from 'lucide-react'
 
 // Import service (untuk fungsi)
 import { dashboardService } from '@/services/dashboard'
 
 // Import type (hanya dari types)
-import type { 
-  DashboardStats, 
-  Activity, 
+import type {
+  DashboardStats,
+  Activity,
   SystemStatus as StatusType,
   RecentOrder,
-  TopProduct,
-  SalesReportParams  // ✅ Sekarang sudah ada
+  TopProduct
 } from '@/types/dashboard'
 
 import { calculatePercentageChange, getTrendDirection } from '@/utils/percentage'
@@ -36,9 +34,9 @@ import { calculatePercentageChange, getTrendDirection } from '@/utils/percentage
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState<DashboardStats | null>(null)
-  
+
   const [chartPeriod, setChartPeriod] = useState<'week' | 'month' | 'year'>('week')
-  
+
   const [salesData, setSalesData] = useState<any[]>([])
   const [categoryData, setCategoryData] = useState<any[]>([])
 
@@ -56,10 +54,10 @@ const AdminDashboard = () => {
     try {
       setLoading(true)
       const data = await dashboardService.getStats()
-      
+
       if (data && typeof data === 'object') {
         setStats(data)
-        
+
         if (data.top_products && Array.isArray(data.top_products)) {
           const categories = data.top_products.slice(0, 5).map((product: TopProduct, index: number) => ({
             name: product.name || 'Unknown',
@@ -90,7 +88,7 @@ const AdminDashboard = () => {
   const fetchSalesData = async () => {
     try {
       const data = await dashboardService.getSalesReport({ period: chartPeriod })
-      
+
       if (data && data.sales_data && Array.isArray(data.sales_data)) {
         setSalesData(data.sales_data)
       } else {
@@ -102,14 +100,14 @@ const AdminDashboard = () => {
     }
   }
 
-  const activities: Activity[] = Array.isArray(stats?.recent_orders) 
+  const activities: Activity[] = Array.isArray(stats?.recent_orders)
     ? stats.recent_orders.map((order: RecentOrder, index: number) => ({
-        id: order.id || index + 1,
-        type: 'order',
-        title: `<strong>New order ${order.order_number || 'N/A'}</strong> from ${order.customer_name || 'Unknown'}`,
-        description: `Order amount: ${order.total_formatted || 'Rp 0'}`,
-        time: order.created_at || new Date().toISOString(),
-      }))
+      id: order.id || index + 1,
+      type: 'order',
+      title: `<strong>New order ${order.order_number || 'N/A'}</strong> from ${order.customer_name || 'Unknown'}`,
+      description: `Order amount: ${order.total_formatted || 'Rp 0'}`,
+      time: order.created_at || new Date().toISOString(),
+    }))
     : []
 
   const getLowStockCount = (): number => {
@@ -123,10 +121,10 @@ const AdminDashboard = () => {
     { name: 'Server Load', value: '42%', status: 'good' },
     { name: 'Database', value: 'Healthy', status: 'good' },
     { name: 'Storage', value: '78%', status: 'warning' },
-    { 
-      name: 'Low Stock', 
-      value: getLowStockCount().toString(), 
-      status: getLowStockCount() > 5 ? 'warning' : 'good' 
+    {
+      name: 'Low Stock',
+      value: getLowStockCount().toString(),
+      status: getLowStockCount() > 5 ? 'warning' : 'good'
     },
   ]
 
@@ -141,25 +139,17 @@ const AdminDashboard = () => {
     }
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
-      </div>
-    )
-  }
-
   const overviewData = [
     {
       title: 'Total Revenue',
       value: stats?.sales?.today_formatted || 'Rp 0',
       change: calculatePercentageChange(
-        stats?.sales?.today || 0, 
+        stats?.sales?.today || 0,
         stats?.sales?.yesterday || 0
       ),
       trend: getTrendDirection(
         calculatePercentageChange(
-          stats?.sales?.today || 0, 
+          stats?.sales?.today || 0,
           stats?.sales?.yesterday || 0
         )
       ),
@@ -170,12 +160,12 @@ const AdminDashboard = () => {
       title: 'Total Orders',
       value: stats?.orders?.today?.toString() || '0',
       change: calculatePercentageChange(
-        stats?.orders?.today || 0, 
+        stats?.orders?.today || 0,
         stats?.orders?.yesterday || 0
       ),
       trend: getTrendDirection(
         calculatePercentageChange(
-          stats?.orders?.today || 0, 
+          stats?.orders?.today || 0,
           stats?.orders?.yesterday || 0
         )
       ),
@@ -186,12 +176,12 @@ const AdminDashboard = () => {
       title: 'New Customers',
       value: stats?.customers?.today?.toString() || '0',
       change: calculatePercentageChange(
-        stats?.customers?.today || 0, 
+        stats?.customers?.today || 0,
         stats?.customers?.yesterday || 0
       ),
       trend: getTrendDirection(
         calculatePercentageChange(
-          stats?.customers?.today || 0, 
+          stats?.customers?.today || 0,
           stats?.customers?.yesterday || 0
         )
       ),
@@ -202,12 +192,12 @@ const AdminDashboard = () => {
       title: 'New Products',
       value: stats?.products?.today?.toString() || '0',
       change: calculatePercentageChange(
-        stats?.products?.today || 0, 
+        stats?.products?.today || 0,
         stats?.products?.yesterday || 0
       ),
       trend: getTrendDirection(
         calculatePercentageChange(
-          stats?.products?.today || 0, 
+          stats?.products?.today || 0,
           stats?.products?.yesterday || 0
         )
       ),
@@ -216,12 +206,25 @@ const AdminDashboard = () => {
     },
   ]
 
+  const OverviewSkeleton = () => (
+    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 animate-pulse">
+      <div className="flex justify-between items-start mb-4">
+        <div className="h-4 bg-gray-200 rounded w-24"></div>
+        <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
+      </div>
+      <div className="h-8 bg-gray-200 rounded w-32 mb-2"></div>
+      <div className="h-4 bg-gray-100 rounded w-16"></div>
+    </div>
+  )
   return (
     <div className="space-y-6 w-full max-w-full overflow-x-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        {overviewData.map((item, index: number) => (
-          <OverviewCard key={index} {...item} />
-        ))}
+        {loading
+          ? Array.from({ length: 4 }).map((_, i) => <OverviewSkeleton key={i} />)
+          : overviewData.map((item, index: number) => (
+            <OverviewCard key={index} {...item} />
+          ))
+        }
       </div>
 
       {getLowStockCount() > 0 && (
@@ -229,7 +232,7 @@ const AdminDashboard = () => {
           <div className="flex items-center">
             <AlertTriangle className="w-5 h-5 text-yellow-400" />
             <p className="ml-3 text-sm text-yellow-700">
-              <span className="font-bold">{getLowStockCount()}</span> products are running low on stock. 
+              <span className="font-bold">{getLowStockCount()}</span> products are running low on stock.
               <a href="/admin/inventory" className="ml-2 font-medium underline hover:text-yellow-600">
                 Check inventory →
               </a>
@@ -249,15 +252,17 @@ const AdminDashboard = () => {
             ]}
             onActionChange={(value) => setChartPeriod(value as 'week' | 'month' | 'year')}
           >
-            {salesData.length > 0 ? (
+            {loading ? (
+              <div className="h-80 bg-gray-50 animate-pulse rounded-lg"></div>
+            ) : salesData.length > 0 ? (
               <div className="w-full overflow-hidden">
-                <SalesChart 
+                <SalesChart
                   data={salesData.map((item: any) => ({
                     date: item.period || '',
                     label: item.period_label || item.period || '',
                     sales: item.total_sales || 0,
                     orders: item.total_orders || 0,
-                  }))} 
+                  }))}
                   type="area"
                   height={350}
                 />
@@ -279,7 +284,9 @@ const AdminDashboard = () => {
               { label: 'Units', value: 'units' },
             ]}
           >
-            {categoryData.length > 0 ? (
+            {loading ? (
+              <div className="h-80 bg-gray-50 animate-pulse rounded-lg"></div>
+            ) : categoryData.length > 0 ? (
               <div className="w-full overflow-hidden">
                 <CustomPieChart data={categoryData} height={350} />
               </div>
@@ -296,7 +303,17 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <StatsCard title="Top Selling Products" viewAllLink="/admin/products">
           <ul className="divide-y divide-gray-200">
-            {Array.isArray(stats?.top_products) && stats.top_products.map((product: TopProduct) => (
+            {loading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <li key={i} className="py-3 animate-pulse flex justify-between">
+                  <div className="space-y-2 flex-1">
+                    <div className="h-4 bg-gray-100 rounded w-1/2"></div>
+                    <div className="h-3 bg-gray-50 rounded w-1/4"></div>
+                  </div>
+                  <div className="h-4 bg-gray-100 rounded w-16"></div>
+                </li>
+              ))
+            ) : Array.isArray(stats?.top_products) && stats.top_products.map((product: TopProduct) => (
               <li key={product.id || Math.random()} className="py-3 first:pt-0 last:pb-0 flex justify-between items-center">
                 <div>
                   <span className="text-sm text-gray-700">{product.name || 'Unknown'}</span>
@@ -310,7 +327,17 @@ const AdminDashboard = () => {
 
         <StatsCard title="Recent Orders" viewAllLink="/admin/orders">
           <ul className="divide-y divide-gray-200">
-            {Array.isArray(stats?.recent_orders) && stats.recent_orders.map((order: RecentOrder) => (
+            {loading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <li key={i} className="py-3 animate-pulse flex justify-between">
+                  <div className="space-y-2 flex-1">
+                    <div className="h-4 bg-gray-100 rounded w-1/2"></div>
+                    <div className="h-3 bg-gray-50 rounded w-1/4"></div>
+                  </div>
+                  <div className="h-4 bg-gray-100 rounded w-20"></div>
+                </li>
+              ))
+            ) : Array.isArray(stats?.recent_orders) && stats.recent_orders.map((order: RecentOrder) => (
               <li key={order.id || Math.random()} className="py-3 first:pt-0 last:pb-0 flex justify-between items-center">
                 <div>
                   <span className="text-sm text-gray-700">{order.order_number || 'N/A'}</span>
