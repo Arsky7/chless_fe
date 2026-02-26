@@ -3,42 +3,57 @@ import { OrderStats as OrderStatsType } from '../types/order.types'
 interface OrderStatsComponentProps {
   stats: OrderStatsType
   onStatClick: (status: string) => void
+  isLoading?: boolean
 }
 
-const OrderStatsComponent = ({ stats, onStatClick }: OrderStatsComponentProps) => {
+const OrderStatsComponent = ({ stats, onStatClick, isLoading }: OrderStatsComponentProps) => {
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <div key={i} className="bg-white rounded-xl p-4 shadow-sm border border-gray-200 animate-pulse">
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+            <div className="h-8 bg-gray-200 rounded w-1/3 mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   const statCards = [
     {
       label: 'Pending',
       value: stats.pending,
-      today: stats.pendingToday,
+      today: stats.pending_today,
       border: 'border-l-4 sm:border-t-4 border-yellow-500',
       textColor: 'text-yellow-600',
     },
     {
       label: 'Processing',
       value: stats.processing,
-      today: stats.processingToday,
+      today: stats.processing_today,
       border: 'border-l-4 sm:border-t-4 border-blue-500',
       textColor: 'text-blue-600',
     },
     {
       label: 'Shipped',
       value: stats.shipped,
-      today: stats.shippedToday,
+      today: stats.shipped_today,
       border: 'border-l-4 sm:border-t-4 border-purple-500',
       textColor: 'text-purple-600',
     },
     {
       label: 'Delivered',
       value: stats.delivered,
-      today: stats.deliveredToday,
+      today: stats.delivered_today,
       border: 'border-l-4 sm:border-t-4 border-green-500',
       textColor: 'text-green-600',
     },
     {
       label: 'Cancelled',
       value: stats.cancelled,
-      today: stats.cancelledToday,
+      today: stats.cancelled_today,
       border: 'border-l-4 sm:border-t-4 border-red-500',
       textColor: 'text-red-600',
     },

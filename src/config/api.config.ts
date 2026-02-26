@@ -183,7 +183,7 @@ export const API_CONFIG: ApiConfig = {
   // ============================================
   // API CONFIGURATION - PASTIKAN INI BENAR!
   // ============================================
-  apiUrl: getEnv('VITE_API_URL', 'http://localhost:8000/api'), // <-- UBAH KE localhost:8000
+  apiUrl: getEnv('VITE_API_URL', 'http://127.0.0.1:8000/api'), // <-- UBAH KE 127.0.0.1:8000
   apiTimeout: getEnvNumber('VITE_API_TIMEOUT', 30000),
   apiVersion: 'v1',
 
@@ -534,7 +534,16 @@ export const isFeatureEnabled = (feature: keyof typeof API_CONFIG.features): boo
 export const getImageUrl = (path: string | null | undefined): string => {
   if (!path) return '/placeholder-image.jpg'
   if (path.startsWith('http')) return path
-  return `${API_CONFIG.apiUrl.replace('/api', '')}/storage/${path}`
+
+  const baseUrl = API_CONFIG.apiUrl.replace('/api', '')
+
+  // Jika path diawali dengan /storage/ atau storage/
+  if (path.startsWith('/storage/')) return `${baseUrl}${path}`
+  if (path.startsWith('storage/')) return `${baseUrl}/${path}`
+
+  // Default: tambahkan /storage/
+  const cleanPath = path.startsWith('/') ? path.substring(1) : path
+  return `${baseUrl}/storage/${cleanPath}`
 }
 
 export default API_CONFIG

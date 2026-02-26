@@ -11,9 +11,9 @@ interface OrderFiltersProps {
 const OrderFilters = ({ onApplyFilters, onResetFilters, onExport }: OrderFiltersProps) => {
   const [filters, setFilters] = useState<FilterParams>({
     status: 'all',
-    dateRange: 'today',
-    customer: '',
-    orderId: '',
+    search: '',
+    date_from: '',
+    date_to: '',
   })
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -29,9 +29,9 @@ const OrderFilters = ({ onApplyFilters, onResetFilters, onExport }: OrderFilters
   const handleReset = () => {
     setFilters({
       status: 'all',
-      dateRange: 'today',
-      customer: '',
-      orderId: '',
+      search: '',
+      date_from: '',
+      date_to: '',
     })
     onResetFilters()
   }
@@ -78,54 +78,49 @@ const OrderFilters = ({ onApplyFilters, onResetFilters, onExport }: OrderFilters
             </select>
           </div>
 
-          {/* Date Range Filter */}
+          {/* Date From */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Date Range
-            </label>
-            <select
-              name="dateRange"
-              value={filters.dateRange}
-              onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg 
-                       focus:ring-2 focus:ring-black focus:border-transparent
-                       bg-gray-50 text-sm"
-            >
-              <option value="today">Today</option>
-              <option value="week">This Week</option>
-              <option value="month">This Month</option>
-              <option value="custom">Custom Range</option>
-            </select>
-          </div>
-
-          {/* Customer Search */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Customer
+              Date From
             </label>
             <input
-              type="text"
-              name="customer"
-              value={filters.customer}
+              type="date"
+              name="date_from"
+              value={filters.date_from || ''}
               onChange={handleChange}
-              placeholder="Search customer..."
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg 
                        focus:ring-2 focus:ring-black focus:border-transparent
                        bg-gray-50 text-sm"
             />
           </div>
 
-          {/* Order ID Search */}
+          {/* Date To */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Order ID
+              Date To
+            </label>
+            <input
+              type="date"
+              name="date_to"
+              value={filters.date_to || ''}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg 
+                       focus:ring-2 focus:ring-black focus:border-transparent
+                       bg-gray-50 text-sm"
+            />
+          </div>
+
+          {/* Search */}
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Search (ID or Customer)
             </label>
             <input
               type="text"
-              name="orderId"
-              value={filters.orderId}
+              name="search"
+              value={filters.search}
               onChange={handleChange}
-              placeholder="Search order ID..."
+              placeholder="Search by order # or customer..."
               className="w-full px-4 py-2.5 border border-gray-300 rounded-lg 
                        focus:ring-2 focus:ring-black focus:border-transparent
                        bg-gray-50 text-sm"

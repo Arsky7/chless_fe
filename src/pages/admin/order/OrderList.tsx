@@ -1,175 +1,157 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import OrderStatsComponent from './components/OrderStats'
 import OrderFilters from './components/OrderFilters'
 import TodaySummaryComponent from './components/TodaySummary'
 import OrdersTable from './components/OrdersTable'
-import { Order, OrderStats as OrderStatsType, TodaySummary, FilterParams } from './types/order.types'
-
-const mockOrders: Order[] = [
-  {
-    id: "ORD-2023-00125",
-    customer: { name: "John Doe", email: "john@email.com", initial: "JD" },
-    date: "2023-11-20 14:30",
-    items: [
-      { name: "Oversized T-Shirt Black", variant: "Size: M, Color: Black", quantity: 2, icon: "fa-tshirt" },
-      { name: "Cargo Pants Beige", variant: "Size: 32, Color: Beige", quantity: 1, icon: "fa-tshirt" }
-    ],
-    total: "Rp 447,000",
-    status: "pending",
-    payment: "pending"
-  },
-  {
-    id: "ORD-2023-00124",
-    customer: { name: "Sarah Wilson", email: "sarah@email.com", initial: "SW" },
-    date: "2023-11-20 13:15",
-    items: [
-      { name: "Hoodie Grey", variant: "Size: L, Color: Grey", quantity: 1, icon: "fa-tshirt" },
-      { name: "Denim Jacket Blue", variant: "Size: M, Color: Blue", quantity: 1, icon: "fa-tshirt" }
-    ],
-    total: "Rp 900,000",
-    status: "processing",
-    payment: "paid"
-  },
-  {
-    id: "ORD-2023-00123",
-    customer: { name: "Michael Chen", email: "michael@email.com", initial: "MC" },
-    date: "2023-11-19 11:45",
-    items: [
-      { name: "Sneakers White", variant: "Size: 42, Color: White", quantity: 1, icon: "fa-shoe-prints" },
-      { name: "Socks Pack (3pcs)", variant: "Size: OS, Color: Mixed", quantity: 2, icon: "fa-socks" }
-    ],
-    total: "Rp 770,000",
-    status: "shipped",
-    payment: "paid"
-  },
-  {
-    id: "ORD-2023-00122",
-    customer: { name: "Lisa Garcia", email: "lisa@email.com", initial: "LG" },
-    date: "2023-11-18 09:20",
-    items: [
-      { name: "Backpack Urban", variant: "Size: OS, Color: Black", quantity: 1, icon: "fa-bag-shopping" },
-      { name: "Cap Black", variant: "Size: OS, Color: Black", quantity: 1, icon: "fa-hat-cowboy" }
-    ],
-    total: "Rp 409,000",
-    status: "delivered",
-    payment: "paid"
-  },
-  {
-    id: "ORD-2023-00121",
-    customer: { name: "David Brown", email: "david@email.com", initial: "DB" },
-    date: "2023-11-17 16:10",
-    items: [
-      { name: "Jeans Blue", variant: "Size: 34, Color: Blue", quantity: 1, icon: "fa-tshirt" },
-      { name: "Belt Leather", variant: "Size: M, Color: Brown", quantity: 1, icon: "fa-tshirt" }
-    ],
-    total: "Rp 455,000",
-    status: "cancelled",
-    payment: "failed"
-  }
-]
-
-const mockStats: OrderStatsType = {
-  pending: 24,
-  processing: 15,
-  shipped: 42,
-  delivered: 156,
-  cancelled: 8,
-  pendingToday: 3,
-  processingToday: 2,
-  shippedToday: 8,
-  deliveredToday: 12,
-  cancelledToday: 1,
-}
-
-const mockTodaySummary: TodaySummary = {
-  newOrders: 15,
-  newOrdersChange: 25,
-  totalRevenue: "Rp 8.5M",
-  revenueChange: 18,
-  avgOrderValue: "Rp 567K",
-  avgOrderChange: -5,
-}
+import {
+  Order,
+  OrderStats as OrderStatsType,
+  TodaySummary,
+  FilterParams,
+  PaginationMeta
+} from './types/order.types'
+import adminOrderService from '../../../services/adminOrderService'
+import { toast } from 'react-hot-toast'
 
 const OrderList = () => {
-  const [orders, setOrders] = useState<Order[]>(mockOrders)
-  const [filteredOrders, setFilteredOrders] = useState<Order[]>(mockOrders)
+  const [orders, setOrders] = useState<Order[]>([])
+  const [stats, setStats] = useState<OrderStatsType | null>(null)
+  const [summary, setSummary] = useState<TodaySummary | null>(null)
+  const [pagination, setPagination] = useState<PaginationMeta | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isStatsLoading, setIsStatsLoading] = useState(true)
+
+  const [filters, setFilters] = useState<FilterParams>({
+    page: 1,
+    per_page: 15,
+    status: 'all'
+  })
+
+  const fetchOrders = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      // Map 'all' status to undefined for API
+      const apiParams = { ...filters }
+      if (apiParams.status === 'all') delete apiParams.status
+
+      const response = await adminOrderService.getOrders(apiParams)
+      if (response.success) {
+        setOrders(response.data)
+        setPagination(response.meta)
+      }
+    } catch (error) {
+      console.error('Failed to fetch orders:', error)
+      toast.error('Failed to load orders')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [filters])
+
+  const fetchStats = useCallback(async () => {
+    setIsStatsLoading(true)
+    try {
+      const response = await adminOrderService.getOrderStats()
+      if (response.success) {
+        setStats(response.data.stats)
+        setSummary(response.data.today_summary)
+      }
+    } catch (error) {
+      console.error('Failed to fetch stats:', error)
+    } finally {
+      setIsStatsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchOrders()
+  }, [fetchOrders])
+
+  useEffect(() => {
+    fetchStats()
+  }, [fetchStats])
 
   const handleStatClick = (status: string) => {
-    const filtered = orders.filter(order => order.status === status)
-    setFilteredOrders(filtered)
+    setFilters(prev => ({ ...prev, status, page: 1 }))
   }
 
-  const handleApplyFilters = (filters: FilterParams) => {
-    let filtered = [...orders]
-
-    if (filters.status !== 'all') {
-      filtered = filtered.filter(order => order.status === filters.status)
-    }
-
-    if (filters.customer) {
-      filtered = filtered.filter(order => 
-        order.customer.name.toLowerCase().includes(filters.customer.toLowerCase()) ||
-        order.customer.email.toLowerCase().includes(filters.customer.toLowerCase())
-      )
-    }
-
-    if (filters.orderId) {
-      filtered = filtered.filter(order => 
-        order.id.toLowerCase().includes(filters.orderId.toLowerCase())
-      )
-    }
-
-    setFilteredOrders(filtered)
+  const handleApplyFilters = (newFilters: FilterParams) => {
+    setFilters(prev => ({
+      ...prev,
+      ...newFilters,
+      page: 1
+    }))
   }
 
   const handleResetFilters = () => {
-    setFilteredOrders(orders)
+    setFilters({
+      page: 1,
+      per_page: 15,
+      status: 'all'
+    })
+  }
+
+  const handlePageChange = (newPage: number) => {
+    setFilters(prev => ({ ...prev, page: newPage }))
   }
 
   const handleExport = () => {
-    alert('Exporting orders to CSV...')
+    toast.success('Preparing export...')
+    // Implementation for export
   }
 
-  const handleViewOrder = (orderId: string) => {
-    const order = orders.find(o => o.id === orderId)
-    if (order) {
-      alert(`View Order: ${orderId}\n\n${JSON.stringify(order, null, 2)}`)
+  const handleViewOrder = (orderId: number) => {
+    // Placeholder for viewing order details
+    window.location.href = `/admin/orders/${orderId}`
+  }
+
+  const handleUpdateStatus = async (orderId: number, status: string) => {
+    try {
+      const response = await adminOrderService.updateStatus(orderId, { status })
+      if (response.success) {
+        toast.success('Order status updated')
+        fetchOrders()
+        fetchStats()
+      }
+    } catch (error) {
+      toast.error('Failed to update status')
     }
   }
 
-  const handleEditOrder = (orderId: string) => {
-    alert(`Edit Order: ${orderId}`)
+  const handlePrintOrder = (orderId: number) => {
+    alert(`Print Invoice: ORD-${orderId}`)
   }
 
-  const handlePrintOrder = (orderId: string) => {
-    alert(`Print Invoice: ${orderId}`)
-  }
-
-  const handleDeleteOrder = (orderId: string) => {
-    if (confirm(`Delete order ${orderId}?`)) {
-      setOrders(orders.filter(o => o.id !== orderId))
-      setFilteredOrders(filteredOrders.filter(o => o.id !== orderId))
+  const handleDeleteOrder = async (orderId: number) => {
+    if (confirm(`Delete order #${orderId}?`)) {
+      try {
+        const response = await adminOrderService.deleteOrder(orderId)
+        if (response.success) {
+          toast.success('Order deleted')
+          fetchOrders()
+          fetchStats()
+        }
+      } catch (error) {
+        toast.error('Failed to delete order')
+      }
     }
-  }
-
-  const handleCreateOrder = () => {
-    alert('Create new order')
-  }
-
-  const handlePrintLabels = () => {
-    alert('Print shipping labels')
   }
 
   return (
     <div className="space-y-6 w-full max-w-full px-4 sm:px-6 lg:px-8">
-      {/* Stats Section - Responsive Grid */}
+      {/* Stats Section */}
       <div className="w-full">
-        <OrderStatsComponent stats={mockStats} onStatClick={handleStatClick} />
+        {stats && (
+          <OrderStatsComponent
+            stats={stats}
+            onStatClick={handleStatClick}
+            isLoading={isStatsLoading}
+          />
+        )}
       </div>
-      
+
       {/* Filters Section */}
       <div className="w-full">
-        <OrderFilters 
+        <OrderFilters
           onApplyFilters={handleApplyFilters}
           onResetFilters={handleResetFilters}
           onExport={handleExport}
@@ -178,20 +160,27 @@ const OrderList = () => {
 
       {/* Summary Section */}
       <div className="w-full">
-        <TodaySummaryComponent summary={mockTodaySummary} />
+        {summary && (
+          <TodaySummaryComponent
+            summary={summary}
+            isLoading={isStatsLoading}
+          />
+        )}
       </div>
 
-      {/* Table Section - No Horizontal Scroll */}
+      {/* Table Section */}
       <div className="w-full">
         <OrdersTable
-          orders={filteredOrders}
+          orders={orders}
+          pagination={pagination}
+          onPageChange={handlePageChange}
+          isLoading={isLoading}
           onViewOrder={handleViewOrder}
-          onEditOrder={handleEditOrder}
+          onUpdateStatus={handleUpdateStatus}
           onPrintOrder={handlePrintOrder}
           onDeleteOrder={handleDeleteOrder}
-          onCreateOrder={handleCreateOrder}
-          onPrintLabels={handlePrintLabels}
-          totalOrders={orders.length}
+          onCreateOrder={() => { }}
+          onPrintLabels={() => { }}
         />
       </div>
     </div>

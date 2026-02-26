@@ -12,6 +12,14 @@ const InventoryPage = lazy(() => import('./pages/admin/inventory/InventoryPage')
 const CategoriesPage = lazy(() => import('./pages/admin/categories/CategoriesPage'))
 const CustomersPage = lazy(() => import('./pages/admin/customers/CustomersPage'))
 const ReturnsManagementPage = lazy(() => import('./pages/admin/returns/ReturnsManagementPage'))
+const ProfilePage = lazy(() => import('./pages/public/ProfilePage'))
+
+// Public Pages
+const LandingPage = lazy(() => import('./pages/public/LandingPage'))
+const ShopPage = lazy(() => import('./pages/public/ShopPage'))
+const NewArrivalsPage = lazy(() => import('./pages/public/NewArrivalsPage'))
+
+const StaffList = lazy(() => import('./pages/admin/staff/StaffList'))
 
 // Loading Component
 const PageLoading = () => (
@@ -27,6 +35,12 @@ function App() {
   return (
     <Suspense fallback={<PageLoading />}>
       <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/new-arrivals" element={<NewArrivalsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
@@ -46,16 +60,13 @@ function App() {
 
           <Route path="inventory" element={<InventoryPage />} />
           <Route path="categories" element={<CategoriesPage />} />
-          <Route path="staff" element={<div className="p-6 text-gray-500">Staff Page Coming Soon</div>} />
+          <Route path="staff" element={<StaffList />} />
           <Route path="reports" element={<div className="p-6 text-gray-500">Reports Page Coming Soon</div>} />
           <Route path="settings" element={<div className="p-6 text-gray-500">Settings Page Coming Soon</div>} />
         </Route>
 
-        {/* Public Routes - Redirect ke admin untuk sementara */}
-        <Route path="/" element={<Navigate to="/admin" replace />} />
-
         {/* Fallback 404 */}
-        <Route path="*" element={<Navigate to="/admin" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
   )
