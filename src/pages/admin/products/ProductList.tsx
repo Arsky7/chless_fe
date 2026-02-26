@@ -20,6 +20,7 @@ import {
   Watch,
   Footprints,
 } from 'lucide-react'
+import ProductViewModal from './components/ProductViewModal'
 
 // ============================================
 // Types
@@ -151,6 +152,11 @@ const ProductList = () => {
   const [products, setProducts] = useState<Product[]>([])
   const [productsLoading, setProductsLoading] = useState(false)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+
+  // Modal State
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null)
+
   const [filters, setFilters] = useState<FilterParams>({
     category: 'all',
     status: 'all',
@@ -383,7 +389,8 @@ const ProductList = () => {
   }
 
   const handleViewProduct = (id: number) => {
-    navigate(`/admin/products/${id}`)
+    setSelectedProductId(id)
+    setIsViewModalOpen(true)
   }
 
   const handleEditProduct = (id: number) => {
@@ -903,6 +910,12 @@ const ProductList = () => {
           </div>
         )}
       </div>
+
+      <ProductViewModal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        productId={selectedProductId}
+      />
     </div>
   )
 }

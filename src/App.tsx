@@ -51,12 +51,10 @@ function App() {
           {/* Payment Routes */}
           <Route path="payments" element={<PaymentManagement />} />
 
-          {/* Product Routes - Nested */}
-          <Route path="products">
-            <Route index element={<ProductList />} />
-            <Route path="new" element={<ProductForm />} />
-            <Route path=":id/edit" element={<ProductForm />} />
-          </Route>
+          {/* Product Routes - Flat */}
+          <Route path="products" element={<ProductList />} />
+          <Route path="products/new" element={<ProductForm />} />
+          <Route path="products/:id/edit" element={<ProductForm />} />
 
           <Route path="inventory" element={<InventoryPage />} />
           <Route path="categories" element={<CategoriesPage />} />

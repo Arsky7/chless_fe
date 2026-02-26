@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, Link } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { apiService } from '../../../services/api'
 import API_CONFIG from '../../../config/api.config'
+import { ArrowLeft, Save, UploadCloud, Image as ImageIcon, Box, Map, Ruler, DollarSign, Loader2 } from 'lucide-react'
 
 // Types
 interface ProductImage {
@@ -467,37 +468,46 @@ const ProductForm = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-gray-500">
-        <a href="/admin" className="hover:text-[#ff4d6d]">Dashboard</a>
-        <span>›</span>
-        <a href="/admin/products" className="hover:text-[#ff4d6d]">Products</a>
-        <span>›</span>
-        <span className="text-gray-900 font-medium">
-          {isEditMode ? 'Edit Product' : 'Add New Product'}
-        </span>
-      </div>
+    <div className="space-y-6 max-w-7xl mx-auto pb-10">
+      {/* Header & Breadcrumb */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div>
+          <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
+            <Link to="/admin" className="hover:text-[#ff4d6d] transition-colors">Dashboard</Link>
+            <span>›</span>
+            <Link to="/admin/products" className="hover:text-[#ff4d6d] transition-colors">Products</Link>
+            <span>›</span>
+            <span className="text-gray-900 font-semibold">{isEditMode ? 'Edit Product' : 'Add New Product'}</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => navigate('/admin/products')}
+              className="p-1.5 bg-gray-50 hover:bg-gray-100 rounded-lg text-gray-600 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {isEditMode ? 'Edit Product' : 'Add New Product'}
+            </h1>
+          </div>
+        </div>
 
-      {/* Page Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">
-          {isEditMode ? '✏️ Edit Product' : '➕ Add New Product'}
-        </h1>
-        <div className="flex gap-3">
+        <div className="flex gap-3 w-full sm:w-auto">
           <button
             onClick={() => handleSubmit('draft')}
             disabled={saving}
-            className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 disabled:opacity-50"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 border border-gray-200 bg-white text-gray-700 text-sm font-semibold rounded-xl hover:bg-gray-50 disabled:opacity-50 transition-all shadow-sm"
           >
-            💾 Save Draft
+            <Save className="w-4 h-4" />
+            Save Draft
           </button>
           <button
             onClick={() => handleSubmit('published')}
             disabled={saving}
-            className="px-4 py-2 bg-[#ff4d6d] text-white rounded-lg text-sm font-medium hover:bg-[#e6304f] disabled:opacity-50"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 bg-[#ff4d6d] text-white text-sm font-semibold rounded-xl hover:bg-[#e6304f] disabled:opacity-50 transition-all shadow-sm hover:shadow"
           >
-            {saving ? 'Saving...' : '🚀 Publish Product'}
+            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <UploadCloud className="w-4 h-4" />}
+            {saving ? 'Saving...' : 'Publish Product'}
           </button>
         </div>
       </div>
@@ -508,9 +518,10 @@ const ProductForm = () => {
         <div className="lg:col-span-2 space-y-6">
 
           {/* Basic Information */}
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h3 className="font-semibold">📝 Basic Information</h3>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-50 flex items-center gap-2">
+              <Box className="w-5 h-5 text-gray-400" />
+              <h3 className="font-bold text-gray-800">Basic Information</h3>
             </div>
             <div className="p-6 space-y-4">
               <div>
@@ -593,10 +604,13 @@ const ProductForm = () => {
           </div>
 
           {/* Product Images */}
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-              <h3 className="font-semibold">🖼️ Product Images</h3>
-              <span className="text-xs text-gray-500">First image = primary image</span>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-50 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <ImageIcon className="w-5 h-5 text-gray-400" />
+                <h3 className="font-bold text-gray-800">Product Images</h3>
+              </div>
+              <span className="text-xs font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md">First image = primary image</span>
             </div>
             <div className="p-6">
               <div
@@ -656,9 +670,10 @@ const ProductForm = () => {
           </div>
 
           {/* Pricing - TANPA Cost Price */}
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h3 className="font-semibold">💰 Pricing</h3>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-50 flex items-center gap-2">
+              <DollarSign className="w-5 h-5 text-gray-400" />
+              <h3 className="font-bold text-gray-800">Pricing</h3>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-2 gap-4">
@@ -709,9 +724,12 @@ const ProductForm = () => {
           </div>
 
           {/* Sizes */}
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-              <h3 className="font-semibold">📏 Product Sizes</h3>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-50 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Ruler className="w-5 h-5 text-gray-400" />
+                <h3 className="font-bold text-gray-800">Product Sizes</h3>
+              </div>
               <button
                 type="button"
                 onClick={addSize}
@@ -757,9 +775,10 @@ const ProductForm = () => {
           </div>
 
           {/* Shipping */}
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
-              <h3 className="font-semibold">🚚 Shipping & Dimensions</h3>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="px-6 py-5 border-b border-gray-50 flex items-center gap-2">
+              <Map className="w-5 h-5 text-gray-400" />
+              <h3 className="font-bold text-gray-800">Shipping & Dimensions</h3>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-2 gap-4 mb-4">
