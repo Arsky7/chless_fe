@@ -1,6 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Product } from '../../services/publicService';
 import { getImageUrl } from '../../config/api.config';
+import { useWishlist } from '../../context/WishlistContext';
+import { Heart } from 'lucide-react';
 
 interface ProductCardProps {
     product: Product;
@@ -8,6 +11,9 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, badge }) => {
+    const { toggleItem, isInWishlist } = useWishlist();
+    const isWished = isInWishlist(product.id);
+
     const rawImage = product.images?.find(img => img.is_main) || product.images?.[0];
     const mainImage = getImageUrl(rawImage?.full_url || rawImage?.url || rawImage?.path);
 
@@ -20,17 +26,33 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, badge }) => {
     };
 
     return (
-        <div className="bg-white rounded overflow-hidden group transition-all duration-300 border border-transparent hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] hover:border-[#e5e5e5] cursor-pointer">
+        <Link
+            to={`/product/${product.slug}`}
+            className="block bg-white rounded overflow-hidden group transition-all duration-300 border border-transparent hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] hover:border-[#e5e5e5] cursor-pointer"
+        >
             <div className="relative pt-[125%] overflow-hidden bg-[#f9f9f9]">
                 <img
                     src={mainImage}
                     alt={product.name}
+                    loading="lazy"
+                    decoding="async"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.08]"
                 />
 
                 {/* Wishlist Button */}
-                <button className="absolute top-3 right-3 w-9 h-9 bg-white border-none rounded-full flex items-center justify-center text-lg opacity-0 transition-all duration-300 group-hover:opacity-100 hover:bg-[#ff4d6d] hover:text-white hover:scale-110 z-10 shadow-sm">
-                    ♡
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleItem(product.id);
+                    }}
+                    className={`absolute top-3 right-3 w-9 h-9 bg-white border-none rounded-full flex items-center justify-center text-lg transition-all duration-300 z-10 shadow-sm ${isWished
+                        ? 'opacity-100 text-[#ff4d6d]'
+                        : 'opacity-0 group-hover:opacity-100 hover:bg-[#ff4d6d] hover:text-white text-gray-400'
+                        } hover:scale-110`}
+                    aria-label={isWished ? "Remove from wishlist" : "Add to wishlist"}
+                >
+                    <Heart className={`w-5 h-5 ${isWished ? 'fill-current' : ''}`} />
                 </button>
 
                 {/* Badge */}
@@ -59,15 +81,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, badge }) => {
                         </span>
                     )}
                 </div>
-
-                {/* Add to Cart - Visible on Hover */}
-                <div className="opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-                    <button className="w-full py-3 bg-black text-white text-[12px] font-semibold tracking-[1.5px] uppercase rounded-sm transition-all duration-300 hover:bg-[#ff4d6d]">
-                        Add to Cart
-                    </button>
-                </div>
             </div>
-        </div>
+        </Link>
     );
 };
 

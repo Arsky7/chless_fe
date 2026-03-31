@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../../components/public/Sidebar';
 import Hero from '../../components/public/Hero';
 import ProductCard from '../../components/public/ProductCard';
 import BrandStory from '../../components/public/BrandStory';
@@ -32,10 +31,8 @@ const LandingPage: React.FC = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-white font-['Inter']">
-            <Sidebar />
-
-            <main className="lg:ml-[240px]">
+        <div className="bg-white font-['Inter'] w-full">
+            <div className="w-full">
                 {/* Hero Section */}
                 <Hero />
 
@@ -51,18 +48,20 @@ const LandingPage: React.FC = () => {
                     </div>
 
                     {loading ? (
-                        <div className="flex justify-center py-20">
-                            <div className="w-10 h-10 border-4 border-[#ff4d6d]/20 border-t-[#ff4d6d] rounded-full animate-spin"></div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-[1400px] mx-auto">
+                            {Array.from({ length: 4 }).map((_, i) => (
+                                <div key={i} className="animate-pulse flex flex-col gap-4">
+                                    <div className="bg-gray-200 rounded-md pt-[125%] w-full"></div>
+                                    <div className="h-4 bg-gray-200 rounded w-1/3 mt-2"></div>
+                                    <div className="h-5 bg-gray-200 rounded w-3/4"></div>
+                                    <div className="h-6 bg-gray-200 rounded w-1/4 mt-1"></div>
+                                </div>
+                            ))}
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-[1400px] mx-auto">
                             {featuredProducts.map((product) => (
                                 <ProductCard key={product.id} product={product} badge="Best Seller" />
-                            ))}
-
-                            {/* Fallback items if API returns empty during dev */}
-                            {featuredProducts.length === 0 && Array.from({ length: 4 }).map((_, i) => (
-                                <div key={i} className="animate-pulse bg-gray-100 rounded-lg aspect-[4/5]"></div>
                             ))}
                         </div>
                     )}
@@ -80,18 +79,20 @@ const LandingPage: React.FC = () => {
                     </div>
 
                     {loading ? (
-                        <div className="flex justify-center py-20">
-                            <div className="w-10 h-10 border-4 border-[#ff4d6d]/20 border-t-[#ff4d6d] rounded-full animate-spin"></div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-[1400px] mx-auto">
+                            {Array.from({ length: 4 }).map((_, i) => (
+                                <div key={i} className="animate-pulse flex flex-col gap-4">
+                                    <div className="bg-gray-200 rounded-md pt-[125%] w-full"></div>
+                                    <div className="h-4 bg-gray-200 rounded w-1/3 mt-2"></div>
+                                    <div className="h-5 bg-gray-200 rounded w-3/4"></div>
+                                    <div className="h-6 bg-gray-200 rounded w-1/4 mt-1"></div>
+                                </div>
+                            ))}
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-[1400px] mx-auto">
                             {newArrivals.map((product) => (
                                 <ProductCard key={product.id} product={product} badge="New" />
-                            ))}
-
-                            {/* Fallback items */}
-                            {newArrivals.length === 0 && Array.from({ length: 4 }).map((_, i) => (
-                                <div key={i} className="animate-pulse bg-white rounded-lg aspect-[4/5]"></div>
                             ))}
                         </div>
                     )}
@@ -145,7 +146,7 @@ const LandingPage: React.FC = () => {
                 {/* Newsletter */}
                 <Newsletter />
 
-            </main>
+            </div>
         </div>
     );
 };

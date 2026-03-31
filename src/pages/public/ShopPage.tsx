@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../../components/public/Sidebar';
 import ProductCard from '../../components/public/ProductCard';
 import ShopHeader from '../../components/public/ShopHeader';
 import ShopToolbar from '../../components/public/ShopToolbar';
-import Footer from '../../components/public/Footer';
 import { publicService, Product } from '../../services/publicService';
 
 const ShopPage: React.FC = () => {
@@ -39,54 +37,52 @@ const ShopPage: React.FC = () => {
     };
 
     return (
-        <div className="flex bg-[#fafafa] min-h-screen">
-            {/* Sidebar */}
-            <Sidebar />
+        <div className="flex flex-col w-full">
+            <ShopHeader />
 
-            {/* Main Content */}
-            <main className="flex-1 ml-0 md:ml-60 flex flex-col min-h-screen">
-                <ShopHeader />
+            <ShopToolbar
+                total={pagination.total}
+                currentCount={products.length}
+            />
 
-                <ShopToolbar
-                    total={pagination.total}
-                    currentCount={products.length}
-                />
+            <section className="px-6 py-10 md:px-16 flex-1">
+                {loading ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-[1600px] mx-auto">
+                        {Array.from({ length: 12 }).map((_, i) => (
+                            <div key={i} className="animate-pulse flex flex-col gap-4">
+                                <div className="bg-gray-200 rounded-md pt-[125%] w-full"></div>
+                                <div className="h-4 bg-gray-200 rounded w-1/3 mt-2"></div>
+                                <div className="h-5 bg-gray-200 rounded w-3/4"></div>
+                                <div className="h-6 bg-gray-200 rounded w-1/4 mt-1"></div>
+                            </div>
+                        ))}
+                    </div>
+                ) : products.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-[1600px] mx-auto">
+                        {products.map((product) => (
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                                badge={product.sale_price ? 'Sale' : undefined}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-20 bg-white rounded-lg border border-dashed border-[#e5e5e5]">
+                        <p className="text-[#666]">No products found.</p>
+                    </div>
+                )}
 
-                <section className="px-6 py-10 md:px-16 flex-1">
-                    {loading ? (
-                        <div className="flex justify-center items-center h-64">
-                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
-                        </div>
-                    ) : products.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-[1600px] mx-auto">
-                            {products.map((product) => (
-                                <ProductCard
-                                    key={product.id}
-                                    product={product}
-                                    badge={product.sale_price ? 'Sale' : undefined}
-                                />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="text-center py-20 bg-white rounded-lg border border-dashed border-[#e5e5e5]">
-                            <p className="text-[#666]">No products found.</p>
-                        </div>
-                    )}
-
-                    {/* Load More Placeholder */}
-                    {pagination.total > products.length && (
-                        <div className="text-center mt-12 mb-20">
-                            <button className="px-16 py-4 bg-transparent border-2 border-black text-black text-sm font-bold tracking-widest uppercase hover:bg-black hover:text-white transition-all duration-300 rounded-sm">
-                                Load More Products
-                            </button>
-                        </div>
-                    )}
-                </section>
-
-                <Footer />
-            </main>
-        </div>
-    );
+                {/* Load More Placeholder */}
+                {pagination.total > products.length && (
+                    <div className="text-center mt-12 mb-20">
+                        <button className="px-16 py-4 bg-transparent border-2 border-black text-black text-sm font-bold tracking-widest uppercase hover:bg-black hover:text-white transition-all duration-300 rounded-sm">
+                            Load More Products
+                        </button>
+                    </div>
+                )}
+            </section>
+        </div>);
 };
 
 export default ShopPage;

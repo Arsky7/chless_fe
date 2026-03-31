@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import AdminLayout from './components/layout/AdminLayout'
+import PublicLayout from './components/layout/PublicLayout'
 
 // Lazy Load Admin Pages
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'))
@@ -12,12 +13,21 @@ const InventoryPage = lazy(() => import('./pages/admin/inventory/InventoryPage')
 const CategoriesPage = lazy(() => import('./pages/admin/categories/CategoriesPage'))
 const CustomersPage = lazy(() => import('./pages/admin/customers/CustomersPage'))
 const ReturnsManagementPage = lazy(() => import('./pages/admin/returns/ReturnsManagementPage'))
+const ShippingPage = lazy(() => import('./pages/admin/shipping/ShippingPage'))
+const ReportsPage = lazy(() => import('./pages/admin/reports/ReportsPage'))
+const SettingsPage = lazy(() => import('./pages/admin/settings/SettingsPage'))
 const ProfilePage = lazy(() => import('./pages/public/ProfilePage'))
 
 // Public Pages
 const LandingPage = lazy(() => import('./pages/public/LandingPage'))
 const ShopPage = lazy(() => import('./pages/public/ShopPage'))
+const LookbookPage = lazy(() => import('./pages/public/LookbookPage'))
+const WishlistPage = lazy(() => import('./pages/public/WishlistPage'))
+const ProductDetailsPage = lazy(() => import('./pages/public/ProductDetailsPage'))
 const NewArrivalsPage = lazy(() => import('./pages/public/NewArrivalsPage'))
+const CartPage = lazy(() => import('./pages/public/CartPage'))
+const CheckoutPage = lazy(() => import('./pages/public/CheckoutPage'))
+const PaymentSuccessPage = lazy(() => import('./pages/public/PaymentSuccessPage'))
 
 const StaffList = lazy(() => import('./pages/admin/staff/StaffList'))
 
@@ -36,10 +46,18 @@ function App() {
     <Suspense fallback={<PageLoading />}>
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/shop" element={<ShopPage />} />
-        <Route path="/new-arrivals" element={<NewArrivalsPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/shop" element={<ShopPage />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/lookbook" element={<LookbookPage />} />
+          <Route path="/product/:slug" element={<ProductDetailsPage />} />
+          <Route path="/new-arrivals" element={<NewArrivalsPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/payment/success" element={<PaymentSuccessPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+        </Route>
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
@@ -47,6 +65,7 @@ function App() {
           <Route path="orders" element={<OrderList />} />
           <Route path="customers" element={<CustomersPage />} />
           <Route path="returns" element={<ReturnsManagementPage />} />
+          <Route path="shipping" element={<ShippingPage />} />
 
           {/* Payment Routes */}
           <Route path="payments" element={<PaymentManagement />} />
@@ -59,8 +78,8 @@ function App() {
           <Route path="inventory" element={<InventoryPage />} />
           <Route path="categories" element={<CategoriesPage />} />
           <Route path="staff" element={<StaffList />} />
-          <Route path="reports" element={<div className="p-6 text-gray-500">Reports Page Coming Soon</div>} />
-          <Route path="settings" element={<div className="p-6 text-gray-500">Settings Page Coming Soon</div>} />
+          <Route path="reports" element={<ReportsPage />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
 
         {/* Fallback 404 */}

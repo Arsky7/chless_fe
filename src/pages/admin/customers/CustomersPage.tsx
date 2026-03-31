@@ -389,8 +389,8 @@ const CustomersPage = () => {
                     </h2>
                 </div>
 
-                <div className="w-full">
-                    <table className="w-full table-fixed">
+                <div className="w-full overflow-x-auto">
+                    <table className="w-full table-fixed min-w-[800px]">
                         <colgroup>
                             <col className="w-[35%]" />
                             <col className="w-[12%]" />

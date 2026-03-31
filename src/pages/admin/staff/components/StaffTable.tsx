@@ -53,8 +53,8 @@ const StaffTable: React.FC<StaffTableProps> = ({ staff, loading, onEdit, onView,
 
     return (
         <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-            <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
+            <div className="overflow-x-auto w-full">
+                <table className="w-full text-left border-collapse min-w-[800px]">
                     <thead>
                         <tr className="border-b border-gray-100">
                             <th className="px-6 py-4 text-sm font-semibold text-gray-900">Staff Member</th>
@@ -124,8 +124,8 @@ const StaffTable: React.FC<StaffTableProps> = ({ staff, loading, onEdit, onView,
                                             <button
                                                 onClick={() => onUpdateStatus(item.id, item.status === 'active' ? 'inactive' : 'active')}
                                                 className={`px-3 py-1 text-sm font-medium border rounded-lg transition-colors ${item.status === 'active'
-                                                        ? 'text-amber-600 border-amber-200 hover:bg-amber-50'
-                                                        : 'text-green-600 border-green-200 hover:bg-green-50'
+                                                    ? 'text-amber-600 border-amber-200 hover:bg-amber-50'
+                                                    : 'text-green-600 border-green-200 hover:bg-green-50'
                                                     }`}
                                             >
                                                 {item.status === 'active' ? 'Deactivate' : 'Activate'}

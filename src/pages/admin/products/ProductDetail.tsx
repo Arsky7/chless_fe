@@ -3,8 +3,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { apiService } from '../../../services/api'
 import { toast } from 'react-hot-toast'
 import {
-    ArrowLeft, Edit3, Trash2, Package, Tag, Star,
-    Map, Ruler, Scale, Eye, EyeOff, Calendar, ShieldCheck, Box
+    ArrowLeft, Edit3, Trash2, Tag, Star,
+    Map, Ruler, Scale, Eye, EyeOff, ShieldCheck, Box
 } from 'lucide-react'
 
 // Types based on the backend data structure
@@ -225,8 +225,8 @@ const ProductDetail = () => {
                                         key={img.id}
                                         onClick={() => setActiveImage(getImageUrl(img.url))}
                                         className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${activeImage === getImageUrl(img.url)
-                                                ? 'border-[#ff4d6d] opacity-100 scale-95 shadow-md'
-                                                : 'border-transparent opacity-60 hover:opacity-100 hover:border-gray-300'
+                                            ? 'border-[#ff4d6d] opacity-100 scale-95 shadow-md'
+                                            : 'border-transparent opacity-60 hover:opacity-100 hover:border-gray-300'
                                             }`}
                                     >
                                         <img

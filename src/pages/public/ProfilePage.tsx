@@ -10,7 +10,6 @@ import {
     AddressPayload,
 } from '../../services/profileService';
 import { authService } from '../../services/authService';
-import Sidebar from '../../components/public/Sidebar';
 
 // ────────────────────────────────────────────
 // Types
@@ -584,11 +583,9 @@ const ProfilePage: React.FC = () => {
     // ────────────────────────────────────────
 
     return (
-        <div className="min-h-screen bg-[#fafafa] flex">
-            <Sidebar />
-
+        <div className="w-full min-h-screen flex flex-col relative">
             {/* Main area */}
-            <main className="lg:ml-[240px] flex-1 min-h-screen">
+            <div className="flex-1 w-full flex flex-col">
                 {/* Page Header */}
                 <div className="bg-white border-b border-[#e5e5e5] px-8 py-6">
                     <div className="flex items-center gap-4">
@@ -669,7 +666,7 @@ const ProfilePage: React.FC = () => {
                         )}
                     </div>
                 </div>
-            </main>
+            </div>
 
             {/* Toast */}
             {toast && <Toast message={toast.msg} type={toast.type} onClose={() => setToast(null)} />}

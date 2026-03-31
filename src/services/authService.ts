@@ -70,4 +70,20 @@ export const authService = {
         const response = await api.get('/v1/me');
         return response.data;
     },
+
+    /**
+     * Update user profile
+     */
+    updateProfile: async (payload: { name: string; phone?: string; gender?: string; birth_date?: string }): Promise<{ success: boolean; message: string; data: User }> => {
+        const response = await api.put('/v1/profile', payload);
+        return response.data;
+    },
+
+    /**
+     * Change user password
+     */
+    changePassword: async (payload: { current_password: string; new_password: string; new_password_confirmation: string }): Promise<{ success: boolean; message: string }> => {
+        const response = await api.post('/v1/profile/change-password', payload);
+        return response.data;
+    },
 };

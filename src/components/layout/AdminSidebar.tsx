@@ -143,14 +143,14 @@ const AdminSidebar = memo(({ isOpen, onToggle }: AdminSidebarProps) => {
   const location = useLocation()
   const currentPath = location.pathname
 
-  // Menggunakan CSS classes yang lebih smooth
+  // Menggunakan CSS classes yang lebih smooth dengan responsive breakpoints
   const sidebarClasses = useMemo(() => `
     fixed left-0 top-0 h-full 
-    bg-white/90 backdrop-blur-sm
+    bg-white/95 backdrop-blur-md
     border-r border-gray-200/50
     z-50 transition-all duration-300 ease-in-out
-    ${isOpen ? 'w-72' : 'w-20'}
-    shadow-lg
+    ${isOpen ? 'translate-x-0 w-72' : '-translate-x-full w-72 lg:translate-x-0 lg:w-20'}
+    shadow-2xl lg:shadow-xl
   `, [isOpen])
 
   // Logo classes
@@ -278,11 +278,12 @@ const AdminSidebar = memo(({ isOpen, onToggle }: AdminSidebarProps) => {
       <button
         onClick={onToggle}
         className="
+          hidden lg:flex
           absolute -right-3 top-20 
           w-7 h-7 
           bg-white border border-gray-200 
           rounded-full 
-          flex items-center justify-center 
+          items-center justify-center 
           text-gray-500 hover:text-black
           hover:scale-110 active:scale-95
           transition-all duration-200

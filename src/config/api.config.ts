@@ -183,7 +183,7 @@ export const API_CONFIG: ApiConfig = {
   // ============================================
   // API CONFIGURATION - PASTIKAN INI BENAR!
   // ============================================
-  apiUrl: getEnv('VITE_API_URL', 'http://127.0.0.1:8000/api'), // <-- UBAH KE 127.0.0.1:8000
+  apiUrl: getEnv('VITE_API_URL', 'http://localhost:8000/api'), // <-- UBAH KE 127.0.0.1:8000
   apiTimeout: getEnvNumber('VITE_API_TIMEOUT', 30000),
   apiVersion: 'v1',
 

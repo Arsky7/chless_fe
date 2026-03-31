@@ -1,4 +1,0 @@
-﻿src/pages/admin/order/components/OrdersTable.tsx(29,9): error TS6133: 'toggleSelectAll' is declared but its value is never read.
-src/pages/admin/payment/components/PaymentStats.ts(3,1): error TS6133: 'formatCurrency' is declared but its value is never read.
-src/pages/admin/payment/PaymentManagements.ts(133,44): error TS2353: Object literal may only specify known properties, and 'id' does not exist in type '{ _id?: string | undefined; _reason?: string | undefined; }'.
-src/pages/admin/products/components/ProductFilters.tsx(1,1): error TS6133: 'useState' is declared but its value is never read.

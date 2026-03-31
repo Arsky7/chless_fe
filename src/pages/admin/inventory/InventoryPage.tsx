@@ -359,9 +359,9 @@ const InventoryPage = () => {
                     )}
                 </div>
 
-                {/* Table — no horizontal scroll, 5 compact columns */}
-                <div className="w-full">
-                    <table className="w-full table-fixed">
+                {/* Table — overflow scroll on mobile to avoid breaking viewport */}
+                <div className="w-full overflow-x-auto">
+                    <table className="w-full table-fixed min-w-[900px]">
                         <colgroup>
                             <col className="w-[35%]" />
                             <col className="w-[13%]" />
